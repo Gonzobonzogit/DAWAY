@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="./assets/images/tickets-32.png" />
+    <link rel="stylesheet" href="./assets/css/reset.css" />
+    <link rel="stylesheet" href="./assets/css/styleMain.css" />
+    <title>DayAway - Plan Your Perfect Day</title>
+  </head>
+
+
+  <div id="loading-indicator" class="loading" style="display: none">
+    <div class="spinner">
+      <p>Loading....</p>
+    </div>
+  </div>
+
+
+  <header class="title-container">
+    <img
+      class="app-logo"
+      id="app-logo"
+      src="assets/images/DayAwayLogo-300x99.png"
+      alt="DayAway Logo"
+    />
+  </header>
+  <body>
+
+    <main class="dashboard">
+      <!--Left column card-->
+      <section id="weather-card" class="weather-container">
+        <div class="weather-content">
+          <div id="weather-info">
+            <h2 id="weather-location">Detecting location...</h2>
+            <div class="weather-data">
+              
+            <span class="temperature" id="temp">--°</span>
+            <!--JavaScript Dynamic variable-->
+            
+          <span class="condition" id="current-cond">--</span>
+            <!--Weather conditions come from JavaScript-->
+            </div>
+          </div>
+          <div id="weather-icon" class="weather-icon">
+            <!--Created by JavaScript-->
+          </div>
+        </div>
+        <button id="location-change-btn" class="location-change-btn">
+        📍Change Location
+        </button>
+      </section>
+
+      <section class="action-buttons">
+        <button class="action-btn" id="search-events-btn">
+          <span class="event-icon">🎉</span>
+          <span class="btn-text">Search Events</span>
+        </button>
+
+        <button class="action-btn" id="search-flights-btn">
+          <span class="btn-icon">✈️</span>
+          <span class="btn-text">Search Flights</span>
+        </button>
+
+        <button class="action-btn" id="check-hotels">
+          <span class="btn-icon">🏨</span>
+          <span class="btn-text">Book Hotels</span>
+        </button>
+      </section>
+      
+      <section class="dynamic-container">
+        <div class="result-header">
+          <h3 id="result-title">Your plans:</h3>
+          <button id="plan-trip" class="plan-trip" style="display: none;">Add plans to current trip</button>
+          
+        
+        </div>
+          <div id="results-content" class="results-content">
+          <p class="placeholder">Search for something to get started!</p>
+        </div>
+      </section>
+
+   
+
+      <!--Right column-->
+      <section class="right-panel">
+        <!--Quick Action buttons goes here-->
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="quick-action-grid">
+            <button id="local-food-btn" class="quick-action-btn">
+              <span class="btn-icon">🍲🍔🍛</span>
+              <span class="btn-text">Find Local Food!</span>
+            </button>
+          
+            <button id="local-transport-btn" class="quick-action-btn">
+              <span class="btn-icon">🚖🚖🚖</span>
+              <span class="btn-text">Local Transportation</span>
+            </button>
+
+            <button id="essentials-btn" class="quick-action-btn">
+              <span class="btn-icon"></span>
+              <span class="btn-text">Essentials</span>
+            </button>
+
+
+            <button id="weather-change-btn" class="weather-change-btn">
+              <span class="btn-icon">🌤️</span>
+              <span class="btn-text">Check Weather</span>
+            </button>
+         
+          </div>          
+        </section>
+
+
+        <!--Current trip-->
+        <section class="current-trip-section" id="current-trip-section">
+          <div class="section-header" id="section-header">
+            <h3>current Trip</h3>
+            <button id="complete-trip-btn" class="complete-trip-btn" style="display: none;">Trip is complete</button>
+          </div>
+        <div class="current-trip-container"     id="current-trip-container">
+          <p class="placeholder"> No trips planned</p>
+        </div>
+      </section>
+
+        <!--Trip history-->
+
+      <section id="past-trip-section" class="past-trip-section">
+        <div class="section-header">
+            <h3 class="past">Past Trips:</h3>
+            <button class="clear-history-btn" id="clear-history-btn">
+              Clear Trip history
+            </button>
+        </div>
+        <div id="past-trip-container" class="past-trip-container">
+          <p class="placeholder">No trips planned</p>
+        </div>
+      </section>
+    </main>
+
+    <!--Modals Go here, will be hidden by default-->
+    <div id="event-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Search for Events</h2>
+          <button class="modal-close" data-modal="event-modal">&times;</button>
+        </div>
+        <form id="event-search-form" class="modal-form">
+          <div class="form-group">
+            <label for="event-type-input">Event Type</label>
+            <input 
+            type="text"
+            id="event-type-input"
+            placeholder="Try concerts, festivals, etc"
+            required
+            >
+          </div>
+          <div class="form-group">
+            <label for="event-location-input">Location</label>
+            <input
+              type="text"
+              id="event-location-input"
+              placeholder="Leave empty to use detected location"
+            >
+            <button type="button" class="btn-secondary"
+            data-modal="event-modal">Cancel</button>
+            <button type="submit" class="btn-primary">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
+
+    <!--Flight modal-->
+
+    <div id="flight-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Search for FLights</h2>
+          <button class="modal-close" data-modal="flight-modal">&times;</button>
+        </div>
+          <form id="flight-search-form" class="modal-form">
+            <div class="form-group">
+              <label for="flight-origin">From (AirPort Code)</label>
+              <input
+                type="text"
+                id="flight-origin"
+                placeholder="E.g. LAX"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label for="flight-destination" class="modal-form">To (AirPort Code)</label>
+              <input
+                type="text"
+                id="flight-destination"
+                placeholder="E.g. JFK"
+               required 
+             >
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="flight-outbound">Depature Date</label>
+                <input 
+                  type="date"
+                  id="flight-outbound"
+                  required
+                >
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" data-modal="flight-modal">Cancel</button>
+              <button typr="button" class="btn-primary" data-modal="flight-modal">Search Flights</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+
+
+      <!--Hotel Modal-->
+
+      <div id="hotel-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Search Hotels</h2>
+            <button class="modal-close" data-modal="hotel-modal">&times;</button>
+          </div>
+          <form id="hotel-search-form" class="modal-form">
+            <div class="form-group">
+              <label for="hotel-location">Location</label>
+              <input 
+                type="text"
+                id="hotel-location"
+                placeholder="Leave empty to use current location"
+                required
+              >
+              <button type="button" class="use-geo-btn" data-target="hotel-location">Use My Location</button>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="hotel-checkin">Check-in Date</label>
+                <input 
+                  type="date"
+                  id="hotel-checkin"
+                  required
+                >
+              </div>
+              <div class="form-group">
+                <label for="hotel-checkout">Check-out Date</label>
+                <input
+                  type="date"
+                  id="hotel-checkout"
+                  required
+                >
+              </div>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" data-modal="hotel-modal">Cancel</button>
+              <button type="submit" class="btn-primary">Search Hotels</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+      <!--Location modal(Used For Multiple Actions)-->
+      
+      <div id="location-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 id="location-modal-title">Enter Location</h2>
+            <button class="modal-close" data-modal="location-modal">&times;</button>
+          </div>
+          <form id="location-form" class="modal-form">
+            <div class="form-group">
+              <label class="simple-location-input">Location</label>
+              <input
+                type="text"
+                id="simple-location-input"
+                placeholder="Leave empty to detect location"
+                required
+              >
+              <button type="button" class="use-geo-btn" data-target="simple-location-input">Use My Location</button>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" data-modal="location-modal">Cancel</button>
+              <button type="submit" class="btn-primary">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+      <!--Trips Modal-->
+      <div id="trip-name-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Plan Your Trip</h2>
+            <button class="modal-close" data-modal="trip-name-modal">&times;</button>
+          </div>
+          <form id="trip-name-form" class="trip-name-form">
+            <div class="form-group">
+              <label for="trip-name-input">Name Your Trip</label>
+              <input 
+                type="text"
+                id="trip-name-input"
+                placeholder="e.g. Weekend in Maimi, California Weekend"
+                required
+              >
+            </div>
+            <div class="form-group">
+              <label class="trip-notes">Notes(optional)</label>
+              <textarea
+                id="trip-notes"
+                rows="3"
+                placeholder="Add notes about your trip"
+              ></textarea>
+            </div>
+            <div class="modal-actions">
+              <button type="button" class="btn-secondary" data-modal="trip-name-modal">Cancel</button>
+              <button type="submit" class="btn-primary">Save Trip</button>
+            </div>
+          </form>
+        </div>
+      </div>
+   
+
+
+     <script src="./assets/js/apiService.js"></script> 
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>
