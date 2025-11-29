@@ -381,7 +381,6 @@ async function handleEventSearch(event) {
 }
 
 async function handleFlightSearch(event) {
-  //event.stopPropagation();
   event.preventDefault();
 
   const origin = document.getElementById("flight-origin").value;
@@ -390,6 +389,7 @@ async function handleFlightSearch(event) {
 
   console.log(origin);
   console.log(destination);
+  console.log(outbound);
   if (!destination && !origin) {
     alert("Please enter an origin and a destination");
     return;
@@ -400,12 +400,12 @@ async function handleFlightSearch(event) {
     return;
   }
 
-  //closeModal("flight-modal");
+  closeModal("flight-modal");
 
   try {
     showLoading(true);
     console.log(
-      `Searching for flights leaving ${origin} heading to ${destination}`
+      `Searching for flights leaving ${origin} heading to ${destination} on ${outbound}`
     );
     const data = await fetchFlights(origin, destination, outbound);
 
