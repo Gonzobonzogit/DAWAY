@@ -169,7 +169,7 @@ function setupEventListener() {
   //   });
   // });
 
-  document.querySelectorAll(".modal-close").forEach((btn) => {
+  document.querySelectorAll(".cancel-modal").forEach((btn) => {
     btn.addEventListener("click", function (event) {
       closeModal(event.target.getAttribute("data-modal"));
     });

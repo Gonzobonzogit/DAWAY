@@ -1,9 +1,7 @@
-
-
 async function getCurrentLocation() {
-  return new Promise((resolve, reject) =>{
-    if(!navigator.geolocation) {
-      reject(new Error('Geolocation not supported, please enter a location'));
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Geolocation not supported, please enter a location"));
       return;
     }
 
@@ -11,21 +9,21 @@ async function getCurrentLocation() {
       (position) => {
         resolve({
           lat: position.coords.latitude,
-          lng: position.coords.longitude
+          lng: position.coords.longitude,
         });
       },
       (error) => {
         const errorMessage = {
-          1: 'Permission Denied',
-          2: 'Position Unavailable',
-          3: 'Timeout'
+          1: "Permission Denied",
+          2: "Position Unavailable",
+          3: "Timeout",
         };
-        reject(new Error(errorMessage[error.code] || 'Geolocation error'));
+        reject(new Error(errorMessage[error.code] || "Geolocation error"));
       },
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 0
+        maximumAge: 0,
       }
     );
   });
@@ -38,13 +36,10 @@ async function getCurrentLocation() {
  * @returns {Promise<Object>} retrieved event data
  */
 
-
-
-
 async function fetchEvents(eventType, location) {
   const params = new URLSearchParams({
     eventType: eventType,
-    location: location
+    location: location,
   });
 
   try {
@@ -65,30 +60,28 @@ async function fetchEvents(eventType, location) {
  * fetch weather from weatherapi
  * @param {string} location -City name or coordinates
  * @param {number} days - number of days in forecast
- * @returns {Promise<Object>}  returned weather data 
- * */ 
-
-
+ * @returns {Promise<Object>}  returned weather data
+ * */
 
 async function fetchWeather(location, days = 5) {
- const params = new URLSearchParams({
-  location: location,
-  days: Math.min(days, 7)
- });
+  const params = new URLSearchParams({
+    location: location,
+    days: Math.min(days, 7),
+  });
 
- try {
-  const response = await fetch(`/api/weather?${params}`);
+  try {
+    const response = await fetch(`/api/weather?${params}`);
 
-  if (!response.ok) {
-    throw new Error(`Weather API error:${response.status}`);
+    if (!response.ok) {
+      throw new Error(`Weather API error:${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("fetchweather error:", error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data;
- } catch(error) {
-  console.error('fetchweather error:', error);
-  throw error;
- }
 }
 
 /**
@@ -99,14 +92,19 @@ async function fetchWeather(location, days = 5) {
  * @param {string} returnDate
  * @returns {Promise<Object>} Returned flight data
  */
-async function fetchFlights(origin, destination, outboundDate, returnDate = null) {
+async function fetchFlights(
+  origin,
+  destination,
+  outboundDate,
+  returnDate = "2025-12-12"
+) {
   const params = new URLSearchParams({
     origin: origin.toUpperCase(),
     destination: destination.toUpperCase(),
-    outboundDate: outboundDate
+    outboundDate: outboundDate,
   });
   if (returnDate) {
-    params.append('returnDate', returnDate);
+    params.append("returnDate", returnDate);
   }
   try {
     const response = await fetch(`/api/flights?${params}`);
@@ -118,26 +116,24 @@ async function fetchFlights(origin, destination, outboundDate, returnDate = null
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('fetchFlights error:', error);
+    console.error("fetchFlights error:", error);
     throw error;
   }
 }
 
 /**
- * 
- * @param {string} location 
- * @param {string} checkIn 
- * @param {string} checkOut 
+ *
+ * @param {string} location
+ * @param {string} checkIn
+ * @param {string} checkOut
  * @returns {Promise<Object>} returned hotel data
  */
-
-
 
 async function fetchHotelPrices(location, checkIn, checkOut) {
   const params = new URLSearchParams({
     location: location,
     checkInDate: checkIn,
-    checkOutDate: checkOut
+    checkOutDate: checkOut,
   });
 
   try {
@@ -155,17 +151,16 @@ async function fetchHotelPrices(location, checkIn, checkOut) {
 }
 
 /**
- * 
- * @param {string} location 
+ *
+ * @param {string} location
  * @returns {Promise<Object>}returned restaurant data
  */
-
 
 async function fetchLocalFood(location) {
   const query = `Restaurants near ${location}`;
   const params = new URLSearchParams({
     query: query,
-    location: location
+    location: location,
   });
 
   try {
@@ -185,21 +180,17 @@ async function fetchLocalFood(location) {
   }
 }
 
-
-
 /**
  *
  * @param {*} location - city or coordinates
  * @returns local transportation data is taxis, buses
  */
 
-
-
 async function fetchLocalTransportation(location) {
   const query = `public transportation near ${location}`;
   const params = new URLSearchParams({
     location: location,
-    query: query
+    query: query,
   });
 
   try {
@@ -207,7 +198,8 @@ async function fetchLocalTransportation(location) {
 
     if (!response.ok) {
       throw new Error(
-        `No local transportation found, Looks like your walking!! ${response.status}`);
+        `No local transportation found, Looks like your walking!! ${response.status}`
+      );
     }
     const data = await response.json();
     return data;
@@ -217,10 +209,9 @@ async function fetchLocalTransportation(location) {
   }
 }
 
-
 /**
- * 
- * @param {string} location 
+ *
+ * @param {string} location
  * @returns {Promise<Object>} local gas station, pharamcys, other essentials
  */
 
@@ -229,7 +220,7 @@ async function fetchEssentials(location) {
 
   const param = new URLSearchParams({
     query: query,
-    location: location
+    location: location,
   });
 
   try {
@@ -239,19 +230,13 @@ async function fetchEssentials(location) {
       throw new Error(`Essentials error:${response.status}`);
     }
 
-
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log(
-      "fetchEssentials error:", error);
-      throw error;
+    console.log("fetchEssentials error:", error);
+    throw error;
   }
 }
-
-
-
-
 
 // Make functions globally accessible
 window.fetchEvents = fetchEvents;
