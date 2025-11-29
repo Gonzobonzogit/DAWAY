@@ -386,10 +386,9 @@ async function handleFlightSearch(event) {
   const origin = document.getElementById("flight-origin").value;
   const destination = document.getElementById("flight-destination").value;
   const outbound = document.getElementById("flight-outbound").value;
+  const returnDate = document.getElementById('flight-return').value;
 
-  console.log(origin);
-  console.log(destination);
-  console.log(outbound);
+
   if (!destination && !origin) {
     alert("Please enter an origin and a destination");
     return;
@@ -407,7 +406,7 @@ async function handleFlightSearch(event) {
     console.log(
       `Searching for flights leaving ${origin} heading to ${destination} on ${outbound}`
     );
-    const data = await fetchFlights(origin, destination, outbound);
+    const data = await fetchFlights(origin, destination, outbound, returnDate);
 
     console.log("Flights API response:", data);
     console.log("Available properties:", Object.keys(data));
