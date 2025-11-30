@@ -813,6 +813,8 @@ function handleAddToTrip() {
     timestamp: new Date().toISOString(),
   };
 
+
+
   currentTrip.push(tripItem);
 
   if (completeTripBtn) {
@@ -821,6 +823,7 @@ function handleAddToTrip() {
 
   displayCurrentTrip();
 
+  //localStorage.setItem(tripItem, currentTrip);
   alert("Added Your Trip!!");
   console.log("Added to your trip:", tripItem.title);
 }
@@ -837,7 +840,7 @@ function displayCurrentTrip() {
     }
     return;
   }
-
+  //localStorage.getItem(tripItem, currentTrip);
   currentTrip.forEach((item) => {
     const tripCard = createTripItemCard(item);
     currentTripContainer.appendChild(tripCard);
@@ -921,9 +924,9 @@ function handleSaveTrip(event) {
 
   closeModal("trip-name-modal");
 
-  alert(`Trip: "${tripName} has been logged in past trips!!!`);
+  alert(`Trip: "${tripName} has been logged into trips!!!`);
 
-  console.log("Trip completed:", tripName);
+  console.log("Trip Planned:", tripName);
 }
 
 function saveToPastTrips(trip) {
@@ -981,7 +984,7 @@ function createPastTripCard(trip) {
 
   card.innerHTML = `
     <div class="past-trip-name">${trip.name}</div>
-    <div class="past-trip-date">Completed: ${date}</div>
+    <div class="past-trip-date">Planned: ${date}</div>
     <div class="past-trip-count">${trip.itemCount} item${
     trip.itemCount !== 1 ? "s" : ""
   }</div>
@@ -994,7 +997,7 @@ function createPastTripCard(trip) {
 
 function viewPastTrip(trip) {
   let details = `Trip: ${trip.name}\n`;
-  details += `Completed: ${new Date(
+  details += `Planned: ${new Date(
     trip.completedDate
   ).toLocaleDateString()}\n`;
   details += `Items: ${trip.itemCount}\n\n`;
