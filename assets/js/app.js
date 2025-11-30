@@ -458,11 +458,12 @@ async function handleHotelSearch(event) {
 
     const data = await fetchHotelPrices(location, checkIn, checkOut);
 
-    currentResults = data.hotel_results || [];
+    currentResults = data.properties || [];
     currentSearchType = "hotel";
 
     displayHotelResults(data, location, checkIn, checkOut);
 
+    console.log("Results: ", data);
     if (planBtn && currentResults.length > 0) {
       planBtn.style.display = "block";
     }
@@ -813,8 +814,6 @@ function handleAddToTrip() {
     timestamp: new Date().toISOString(),
   };
 
-
-
   currentTrip.push(tripItem);
 
   if (completeTripBtn) {
@@ -997,9 +996,7 @@ function createPastTripCard(trip) {
 
 function viewPastTrip(trip) {
   let details = `Trip: ${trip.name}\n`;
-  details += `Planned: ${new Date(
-    trip.completedDate
-  ).toLocaleDateString()}\n`;
+  details += `Planned: ${new Date(trip.completedDate).toLocaleDateString()}\n`;
   details += `Items: ${trip.itemCount}\n\n`;
 
   if (trip.notes) {
