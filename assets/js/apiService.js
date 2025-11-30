@@ -96,7 +96,7 @@ async function fetchFlights(
   origin,
   destination,
   outboundDate,
-  returnDate = "null"
+  returnDate = "2025-12-12"
 ) {
   const params = new URLSearchParams({
     origin: origin.toUpperCase(),

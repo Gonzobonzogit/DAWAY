@@ -345,6 +345,24 @@ body {
   background-color: var(--primary-dark);
 }
 
+.plan-trip {
+  background-color: white;
+  color: black;
+  border: 2px solid var(--border-color);
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.plan-trip:hover {
+  background-color: #c8c8c8;
+}
+
+.plan-trip:active {
+  background-color: darkgray;
+}
+
 .modal {
   display: none;
   position: fixed;

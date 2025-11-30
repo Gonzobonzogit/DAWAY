@@ -386,8 +386,7 @@ async function handleFlightSearch(event) {
   const origin = document.getElementById("flight-origin").value;
   const destination = document.getElementById("flight-destination").value;
   const outbound = document.getElementById("flight-outbound").value;
-  const returnDate = document.getElementById('flight-return').value;
-
+  const returnDate = document.getElementById("flight-return").value;
 
   if (!destination && !origin) {
     alert("Please enter an origin and a destination");
@@ -601,7 +600,7 @@ function createEventCard(event) {
   const title = event.title || "event";
   const date = event.date?.when || "Date TBA";
   const venue = event.address?.[0] || "Venue TBA";
-  const thumbnail = event.thumbnail || "";
+  const thumbnail = event.image || "";
 
   card.innerHTML = `
   ${thumbnail ? `<img src="${thumbnail}" alt="${title}">` : ""}
