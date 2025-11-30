@@ -179,7 +179,7 @@ body {
 }
 
 .action-btn:hover {
-  background: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #a47eca 100%);
   color: #000000;
   border-color: var(--primary-color);
   padding: var(--spacing-md);
