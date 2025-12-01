@@ -922,6 +922,11 @@ function updatePlanButtonText() {
 
 function clearSelections() {
   selectedItems.clear();
+  const allSelected = document.querySelectorAll(".selected");
+  allSelected.forEach((item, index) => {
+    item.classList.remove("selected");
+    item.textContent = "Select This";
+  });
   console.log("Selctions hae been cleared");
 }
 
