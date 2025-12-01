@@ -1,3 +1,7 @@
+// Dayjs Plugins
+dayjs.extend(window.dayjs_plugin_customParseFormat);
+dayjs.extend(dayjs_plugin_relativeTime);
+
 ///Global DOM variables
 //loading
 let loadingIndicator;
@@ -526,7 +530,6 @@ async function handleLocationSearch(event) {
     showLoading(false);
     pendingModalAction = null;
   }
-
 }
 
 async function searchLocalFood(location) {
@@ -608,7 +611,6 @@ function displayEventResults(data, eventType, location) {
   });
 }
 
-
 function createEventCard(event, index) {
   const card = document.createElement("div");
   card.className = "result-card";
@@ -632,23 +634,22 @@ function createEventCard(event, index) {
         ? `<a href="${event.link}" target="_blank" class="card-link">More Information</a>`
         : ""
     }
-    <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
-      ${isSelected ? '✓ Selected' : 'Select this'} 
+    <button class="select-item-btn ${
+      isSelected ? "selected" : ""
+    }" data-item-index="${index}">
+      ${isSelected ? "✓ Selected" : "Select this"} 
     </button>
     </div>
   `;
 
-  const selectBtn = card.querySelector('.select-item-btn');
-  selectBtn.addEventListener('click', (e) => {
+  const selectBtn = card.querySelector(".select-item-btn");
+  selectBtn.addEventListener("click", (e) => {
     e.preventDefault();
     toggleItemSelection(index, card);
   });
 
   return card;
 }
-
-
-
 
 function displayFlightResults(data, origin, destination) {
   if (resultsTitle) {
@@ -672,15 +673,6 @@ function displayFlightResults(data, origin, destination) {
   });
 }
 
-
-
-
-
-
-
-
-
-
 function createFlightCard(flight, index) {
   const card = document.createElement("div");
   card.className = "result-card";
@@ -689,48 +681,53 @@ function createFlightCard(flight, index) {
   const flights = flight.flights || [];
   const firstFlight = flights[0] || {};
   const isSelected = selectedItems.has(index);
+  let allFlights = "";
 
+  for (let singleFlight of flights) {
+    allFlights += `<p class="card-info airline-margin-top"><span class="airport-names">${
+      singleFlight.departure_airport?.name || "origin"
+    }</span> → <span class="airport-names">${
+      singleFlight.arrival_airport?.name || "Destination"
+    }</span></p>
+    <p>Flight Number: <span class="airport-names">${
+      singleFlight.flight_number
+    }</span></p>
+      <p class="card-info">${dayjs(
+        singleFlight.departure_airport?.time || "--"
+      ).format("ddd MMM DD, YYYY h:mm a")} to ${dayjs(
+      singleFlight.arrival_airport?.time || "--"
+    ).format("ddd MMM DD, YYYY h:mm a")}</p>`;
+  }
 
   card.innerHTML = `
     <div class="card-content">
       <h4 class="card-title">${firstFlight.airline || "Flight"}</h4>
-      <p class="card-info">${
-        firstFlight.departure_airport?.name || "origin"
-      } to ${firstFlight.arrival_airport?.name || "Destination"}</p>
-      <p class="card-info">${firstFlight.departure_airport?.time || "--"} to ${
-    firstFlight.arrival_airport?.time || "--"
-  }</p>
-      ${flight.price ? `<p class="card-info">$${flight.price}</p>` : ""}
+      ${allFlights}
+      ${
+        flight.price
+          ? `<p class="card-info"><span class="airport-price">$${flight.price}</p>`
+          : ""
+      }</span>
       ${
         flight.booking_token
           ? `<a href="#" class="card-link">Book Flight</a>`
           : ""
       }
-      <button class="select-item-btn ${isSelected ? 'selected' : ''}"
+      <button class="select-item-btn ${isSelected ? "selected" : ""}"
       data-item-index="${index}">
-        ${isSelected ? "✓ Selected" : 'Select This'}
+        ${isSelected ? "✓ Selected" : "Select This"}
       </button>
     </div>
   `;
 
-      const selectBtn = card.querySelector(".select-item-btn");
-      selectBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleItemSelection(index, card);
-      });
+  const selectBtn = card.querySelector(".select-item-btn");
+  selectBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleItemSelection(index, card);
+  });
 
   return card;
 }
-
-
-
-
-
-
-
-
-
-
 
 function displayHotelResults(data, location) {
   if (resultsTitle) {
@@ -784,18 +781,19 @@ function createHotelCard(hotel, index) {
         ? `<a href="${hotel.link}" target="_blank" class="card-link"> View Hotel</a>`
         : ""
     }
-    <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
-      ${isSelected ? '✓ Selected' : 'Select This'}
+    <button class="select-item-btn ${
+      isSelected ? "selected" : ""
+    }" data-item-index="${index}">
+      ${isSelected ? "✓ Selected" : "Select This"}
     </button>
   </div>
   `;
-  
+
   const selectBtn = card.querySelector(".select-item-btn");
-  selectBtn.addEventListener('click', (e) => {
+  selectBtn.addEventListener("click", (e) => {
     e.preventDefault();
     toggleItemSelection(index, card);
   });
-
 
   return card;
 }
@@ -835,14 +833,16 @@ function createLocalCard(result, index) {
       ${result.rating ? `<p class="card-info">${result.rating}</p>` : ""}
       ${result.address ? `<p class="card-info">${result.address}</p>` : ""}
       ${result.phone ? `<p class="card-info">${result.phone}</p>` : ""}
-      <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
-        ${isSelected ? '✓ Selected' : 'Select This'}
+      <button class="select-item-btn ${
+        isSelected ? "selected" : ""
+      }" data-item-index="${index}">
+        ${isSelected ? "✓ Selected" : "Select This"}
       </button>
     </div>
   `;
 
   const selectBtn = card.querySelector(".select-item-btn");
-  selectBtn.addEventListener('click', (e) => {
+  selectBtn.addEventListener("click", (e) => {
     e.preventDefault();
     toggleItemSelection(index, card);
   });
@@ -891,17 +891,17 @@ function createWeatherCard(day) {
 }
 
 function toggleItemSelection(index, card) {
-  if(!selectedItems.has(index)) {
+  if (!selectedItems.has(index)) {
     selectedItems.add(index);
-    const btn = card.querySelector('.select-item-btn');
-    btn.textContent = '✓ Selected';
-    btn.classList.add('selected');
+    const btn = card.querySelector(".select-item-btn");
+    btn.textContent = "✓ Selected";
+    btn.classList.add("selected");
     console.log(`Item ${index} selected`);
   } else {
     selectedItems.delete(index);
-    const btn = card.querySelector('.select-item-btn');
-    btn.textContent = 'Select this';
-    btn.classList.remove('selected');
+    const btn = card.querySelector(".select-item-btn");
+    btn.textContent = "Select this";
+    btn.classList.remove("selected");
     console.log(`Item ${index} was unselected`);
   }
 
@@ -912,7 +912,7 @@ function updatePlanButtonText() {
   if (!planBtn) return;
 
   if (selectedItems.size === 0) {
-    planBtn.textContent = 'Add plans to current trip';
+    planBtn.textContent = "Add plans to current trip";
   } else if (selectedItems.size === 1) {
     planBtn.textContent = `Add ${selectedItems.size} item to trip`;
   } else {
@@ -922,13 +922,10 @@ function updatePlanButtonText() {
 
 function clearSelections() {
   selectedItems.clear();
-  console.log('Selctions hae been cleared');
+  console.log("Selctions hae been cleared");
 }
 
-
-
 function handleAddToTrip() {
-
   if (selectedItems.size === 0) {
     alert("Please make at least one selection to add to the trip");
     return;
@@ -939,7 +936,9 @@ function handleAddToTrip() {
     return;
   }
 
-  const itemsToAdd = Array.from(selectedItems).map(index => currentResults[index]);
+  const itemsToAdd = Array.from(selectedItems).map(
+    (index) => currentResults[index]
+  );
 
   if (selectedItems.size > 1) {
     const confirmMessage = `You have selected ${selectedItems.size} items.  Add all to your trip?`;
@@ -960,7 +959,6 @@ function handleAddToTrip() {
     currentTrip.push(tripItem);
   });
 
-
   if (completeTripBtn) {
     completeTripBtn.style.display = "block";
   }
@@ -969,30 +967,30 @@ function handleAddToTrip() {
 
   clearSelections();
   updatePlanButtonText();
- 
+
   alert(`Added ${itemsToAdd.length} items to your trip!`);
   console.log(`Added ${itemsToAdd.length} items to your trip`);
 }
 
 function getItemTitle(item, type) {
-  switch(type) {
-    case 'events':
-      return item.title || 'Event';
-    case 'flight':
+  switch (type) {
+    case "events":
+      return item.title || "Event";
+    case "flight":
       const flight = item.flights?.[0];
-      return `${flight?.airline || 'Flight'} ${flight?.departure_airport?.id || ''} → ${flight?.arrival_airport?.id || ''}`;
-    case 'hotel': 
-      return item.name || 'Hotel';
-    case 'food':
-    case 'transportation':
-    case 'essentials':
-      return item.title || item.name || 'Location';
+      return `${flight?.airline || "Flight"} ${
+        flight?.departure_airport?.id || ""
+      } → ${flight?.arrival_airport?.id || ""}`;
+    case "hotel":
+      return item.name || "Hotel";
+    case "food":
+    case "transportation":
+    case "essentials":
+      return item.title || item.name || "Location";
     default:
-      return 'Trip Item';    
+      return "Trip Item";
   }
 }
-
-
 
 function displayCurrentTrip() {
   if (!currentTripContainer) return;
