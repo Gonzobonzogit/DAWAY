@@ -694,7 +694,7 @@ function createFlightCard(flight, index) {
     }</span></p>
       <p class="card-info">${dayjs(
         singleFlight.departure_airport?.time || "--"
-      ).format("ddd MMM DD, YYYY h:mm a")} to ${dayjs(
+      ).format("ddd MMM DD, YYYY h:mm a")} → ${dayjs(
       singleFlight.arrival_airport?.time || "--"
     ).format("ddd MMM DD, YYYY h:mm a")}</p>`;
   }
