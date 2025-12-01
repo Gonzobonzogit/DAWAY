@@ -557,6 +557,30 @@ body {
   font-weight: 600;
 }
 
+.select-item-btn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.select-item-btn:hover {
+  background-color: #45a049;
+}
+
+.select-item-btn.selected {
+  background-color: #2196F3;
+}
+
+.select-item-btn.selected:hover {
+  background-color: #0b7dda;
+}
+
 .complete-trip-btn {
   background: var(--success-color);
   color: white;

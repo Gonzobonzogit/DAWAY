@@ -43,6 +43,8 @@ let tripNameForm;
 let detectedLocation = null; //stores lat and long from geolocator, or user entry
 let currentResults = []; //stores local searchs
 
+let selectedItems = new Set();
+
 let currentSearchType = null;
 
 let currentTrip = []; //array of items for current trip
@@ -378,6 +380,7 @@ async function handleEventSearch(event) {
   } finally {
     showLoading(false);
   }
+  clearSelections();
 }
 
 async function handleFlightSearch(event) {
@@ -426,6 +429,8 @@ async function handleFlightSearch(event) {
   } finally {
     showLoading(false);
   }
+
+  clearSelections();
 }
 
 async function handleHotelSearch(event) {
@@ -474,6 +479,8 @@ async function handleHotelSearch(event) {
   } finally {
     showLoading(false);
   }
+
+  clearSelections();
 }
 
 async function handleLocationSearch(event) {
@@ -519,6 +526,7 @@ async function handleLocationSearch(event) {
     showLoading(false);
     pendingModalAction = null;
   }
+
 }
 
 async function searchLocalFood(location) {
@@ -533,6 +541,8 @@ async function searchLocalFood(location) {
   if (planBtn && currentResults.length > 0) {
     planBtn.style.display = "block";
   }
+
+  clearSelections();
 }
 
 async function searchLocalTransportation(location) {
@@ -547,6 +557,8 @@ async function searchLocalTransportation(location) {
   if (planBtn && currentResults.length > 0) {
     planBtn.style.display = "block";
   }
+
+  clearSelections();
 }
 
 async function searchEssentials(location) {
@@ -561,6 +573,8 @@ async function searchEssentials(location) {
   if (planBtn && currentResults.length > 0) {
     planBtn.style.display = "block";
   }
+
+  clearSelections();
 }
 
 async function searchWeather(location) {
@@ -588,20 +602,24 @@ function displayEventResults(data, eventType, location) {
     return;
   }
 
-  events.forEach((event) => {
-    const card = createEventCard(event);
+  events.forEach((event, index) => {
+    const card = createEventCard(event, index);
     resultsContent.appendChild(card);
   });
 }
 
-function createEventCard(event) {
+
+function createEventCard(event, index) {
   const card = document.createElement("div");
   card.className = "result-card";
+  card.dataset.itemIndex = index;
 
   const title = event.title || "event";
   const date = event.date?.when || "Date TBA";
   const venue = event.address?.[0] || "Venue TBA";
   const thumbnail = event.image || "";
+
+  const isSelected = selectedItems.has(index);
 
   card.innerHTML = `
   ${thumbnail ? `<img src="${thumbnail}" alt="${title}">` : ""}
@@ -614,11 +632,23 @@ function createEventCard(event) {
         ? `<a href="${event.link}" target="_blank" class="card-link">More Information</a>`
         : ""
     }
+    <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
+      ${isSelected ? '✓ Selected' : 'Select this'} 
+    </button>
     </div>
   `;
 
+  const selectBtn = card.querySelector('.select-item-btn');
+  selectBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleItemSelection(index, card);
+  });
+
   return card;
 }
+
+
+
 
 function displayFlightResults(data, origin, destination) {
   if (resultsTitle) {
@@ -636,18 +666,30 @@ function displayFlightResults(data, origin, destination) {
     return;
   }
 
-  flights.forEach((flight) => {
-    const card = createFlightCard(flight);
+  flights.forEach((flight, index) => {
+    const card = createFlightCard(flight, index);
     resultsContent.appendChild(card);
   });
 }
 
-function createFlightCard(flight) {
+
+
+
+
+
+
+
+
+
+function createFlightCard(flight, index) {
   const card = document.createElement("div");
   card.className = "result-card";
+  card.dataset.itemIndex = index;
 
   const flights = flight.flights || [];
   const firstFlight = flights[0] || {};
+  const isSelected = selectedItems.has(index);
+
 
   card.innerHTML = `
     <div class="card-content">
@@ -664,10 +706,31 @@ function createFlightCard(flight) {
           ? `<a href="#" class="card-link">Book Flight</a>`
           : ""
       }
+      <button class="select-item-btn ${isSelected ? 'selected' : ''}"
+      data-item-index="${index}">
+        ${isSelected ? "✓ Selected" : 'Select This'}
+      </button>
     </div>
   `;
+
+      const selectBtn = card.querySelector(".select-item-btn");
+      selectBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        toggleItemSelection(index, card);
+      });
+
   return card;
 }
+
+
+
+
+
+
+
+
+
+
 
 function displayHotelResults(data, location) {
   if (resultsTitle) {
@@ -685,15 +748,18 @@ function displayHotelResults(data, location) {
     return;
   }
 
-  hotels.forEach((hotel) => {
-    const card = createHotelCard(hotel);
+  hotels.forEach((hotel, index) => {
+    const card = createHotelCard(hotel, index);
     resultsContent.appendChild(card);
   });
 }
 
-function createHotelCard(hotel) {
+function createHotelCard(hotel, index) {
   const card = document.createElement("div");
   card.className = "result-card";
+  card.dataset.itemIndex = index;
+
+  const isSelected = selectedItems.has(index);
 
   card.innerHTML = `
   ${
@@ -718,8 +784,18 @@ function createHotelCard(hotel) {
         ? `<a href="${hotel.link}" target="_blank" class="card-link"> View Hotel</a>`
         : ""
     }
+    <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
+      ${isSelected ? '✓ Selected' : 'Select This'}
+    </button>
   </div>
   `;
+  
+  const selectBtn = card.querySelector(".select-item-btn");
+  selectBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleItemSelection(index, card);
+  });
+
 
   return card;
 }
@@ -739,15 +815,18 @@ function displayLocalResults(data, title, location) {
     return;
   }
 
-  results.forEach((result) => {
-    const card = createLocalCard(result);
+  results.forEach((result, index) => {
+    const card = createLocalCard(result, index);
     resultsContent.appendChild(card);
   });
 }
 
-function createLocalCard(result) {
+function createLocalCard(result, index) {
   const card = document.createElement("div");
   card.className = "result-card";
+  card.dataset.itemIndex = index;
+
+  const isSelected = selectedItems.has(index);
 
   card.innerHTML = `
     <div class="card-content">
@@ -756,8 +835,18 @@ function createLocalCard(result) {
       ${result.rating ? `<p class="card-info">${result.rating}</p>` : ""}
       ${result.address ? `<p class="card-info">${result.address}</p>` : ""}
       ${result.phone ? `<p class="card-info">${result.phone}</p>` : ""}
+      <button class="select-item-btn ${isSelected ? 'selected' : ''}" data-item-index="${index}">
+        ${isSelected ? '✓ Selected' : 'Select This'}
+      </button>
     </div>
   `;
+
+  const selectBtn = card.querySelector(".select-item-btn");
+  selectBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    toggleItemSelection(index, card);
+  });
+
   return card;
 }
 
@@ -801,20 +890,76 @@ function createWeatherCard(day) {
   return card;
 }
 
+function toggleItemSelection(index, card) {
+  if(!selectedItems.has(index)) {
+    selectedItems.add(index);
+    const btn = card.querySelector('.select-item-btn');
+    btn.textContent = '✓ Selected';
+    btn.classList.add('selected');
+    console.log(`Item ${index} selected`);
+  } else {
+    selectedItems.delete(index);
+    const btn = card.querySelector('.select-item-btn');
+    btn.textContent = 'Select this';
+    btn.classList.remove('selected');
+    console.log(`Item ${index} was unselected`);
+  }
+
+  updatePlanButtonText();
+}
+
+function updatePlanButtonText() {
+  if (!planBtn) return;
+
+  if (selectedItems.size === 0) {
+    planBtn.textContent = 'Add plans to current trip';
+  } else if (selectedItems.size === 1) {
+    planBtn.textContent = `Add ${selectedItems.size} item to trip`;
+  } else {
+    planBtn.textContent = `Add ${selectedItems.size} items to trip`;
+  }
+}
+
+function clearSelections() {
+  selectedItems.clear();
+  console.log('Selctions hae been cleared');
+}
+
+
+
 function handleAddToTrip() {
+
+  if (selectedItems.size === 0) {
+    alert("Please make at least one selection to add to the trip");
+    return;
+  }
+
   if (currentResults.length === 0) {
     alert("No results to add");
     return;
   }
-  const tripItem = {
-    id: Date.now(),
-    type: currentSearchType,
-    title: resultsTitle ? resultsTitle.textContent : "Search Results",
-    results: [...currentResults],
-    timestamp: new Date().toISOString(),
-  };
 
-  currentTrip.push(tripItem);
+  const itemsToAdd = Array.from(selectedItems).map(index => currentResults[index]);
+
+  if (selectedItems.size > 1) {
+    const confirmMessage = `You have selected ${selectedItems.size} items.  Add all to your trip?`;
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+  }
+
+  itemsToAdd.forEach((item, idx) => {
+    const tripItem = {
+      id: Date.now() + idx,
+      type: currentSearchType,
+      title: getItemTitle(item, currentSearchType),
+      results: [item],
+      timestamp: new Date().toISOString(),
+    };
+
+    currentTrip.push(tripItem);
+  });
+
 
   if (completeTripBtn) {
     completeTripBtn.style.display = "block";
@@ -822,10 +967,32 @@ function handleAddToTrip() {
 
   displayCurrentTrip();
 
-  //localStorage.setItem(tripItem, currentTrip);
-  alert("Added Your Trip!!");
-  console.log("Added to your trip:", tripItem.title);
+  clearSelections();
+  updatePlanButtonText();
+ 
+  alert(`Added ${itemsToAdd.length} items to your trip!`);
+  console.log(`Added ${itemsToAdd.length} items to your trip`);
 }
+
+function getItemTitle(item, type) {
+  switch(type) {
+    case 'events':
+      return item.title || 'Event';
+    case 'flight':
+      const flight = item.flights?.[0];
+      return `${flight?.airline || 'Flight'} ${flight?.departure_airport?.id || ''} → ${flight?.arrival_airport?.id || ''}`;
+    case 'hotel': 
+      return item.name || 'Hotel';
+    case 'food':
+    case 'transportation':
+    case 'essentials':
+      return item.title || item.name || 'Location';
+    default:
+      return 'Trip Item';    
+  }
+}
+
+
 
 function displayCurrentTrip() {
   if (!currentTripContainer) return;
