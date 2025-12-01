@@ -977,10 +977,29 @@ function getItemTitle(item, type) {
     case "events":
       return item.title || "Event";
     case "flight":
-      const flight = item.flights?.[0];
-      return `${flight?.airline || "Flight"} ${
-        flight?.departure_airport?.id || ""
-      } → ${flight?.arrival_airport?.id || ""}`;
+      const flights = item?.flights;
+      let totalFlights = {
+        arrival: "Arrival Airport",
+        departure: "Departure Airport",
+        airline: "Airline",
+      };
+      if (flights.length > 1) {
+        flights.forEach((flight, index) => {
+          if (index == 0) {
+            totalFlights.departure = flight?.departure_airport?.id;
+            totalFlights.airline = flight?.airline;
+          } else if (index == flights.length - 1) {
+            totalFlights.arrival = flight?.arrival_airport?.id;
+          }
+        });
+      } else {
+        totalFlights.airline = flights[0]?.airline;
+        totalFlights.departure = flights[0]?.departure_airport?.id;
+        totalFlights.arrival = flights[0]?.arrival_airport?.id;
+      }
+      return `${totalFlights.airline || "Flight"}: ${
+        totalFlights.departure || ""
+      } → ${totalFlights.arrival || ""}`;
     case "hotel":
       return item.name || "Hotel";
     case "food":
