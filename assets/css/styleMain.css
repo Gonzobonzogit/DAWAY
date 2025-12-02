@@ -34,6 +34,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
   background-color: var(--background);
+  background-image: url(/assets/images/DayAwayBackground1.png);
+  background-repeat: repeat-y;
+  background-position: center center;
+  background-size: cover;
   color: var(--text-color);
   line-height: 1.6;
 }
@@ -46,6 +50,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
+  transition: height 0.6s ease-in-out;
+}
+
+.title-container.shrink {
+  height: 60px;
+}
+
+.title-container.shrink img {
+  height: 30px;
 }
 
 .app-logo {
@@ -70,13 +83,16 @@ body {
 }
 
 .weather-container {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea76 0%, #764ba276 100%);
   border-radius: var(--border-radius);
   padding: 24px 24px 5px 24px;
   color: white;
   box-shadow: var(--box-shadow);
   min-height: 100px;
   max-height: 225px;
+  backdrop-filter: blur(30px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 5px rgba(255, 255, 255, 0.5), 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .weather-content {
@@ -176,14 +192,20 @@ body {
   width: 100%;
   margin-bottom: 10px;
   min-height: 68px;
+  transition: background 0.2s ease-in-out, backdrop-filter 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
 }
 
 .action-btn:hover {
-  background: linear-gradient(135deg, #667eea 0%, #a47eca 100%);
-  color: #000000;
-  border-color: var(--primary-color);
+  background: linear-gradient(135deg, #667eea76 0%, #a47eca76 100%);
+  color: var(--background);
+  /* border-color: var(--primary-color); */
+  border: none;
   padding: var(--spacing-md);
   box-shadow: var(--box-shadow);
+  backdrop-filter: blur(30px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 5px rgba(255, 255, 255, 0.5), 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .btn-icon {
@@ -198,6 +220,7 @@ body {
 .quick-actions h3 {
   margin-bottom: var(--spacing-sm);
   font-size: 1.1rem;
+  color: var(--background);
 }
 
 .quick-action-grid {
@@ -220,9 +243,14 @@ body {
 }
 
 .quick-action-btn:hover {
-  border-color: var(--primary-color);
-  transform: translateY(-2px);
+  background: linear-gradient(135deg, #667eea76 0%, #a47eca76 100%);
+  color: var(--background);
+  border: none;
+  transform: scale(101%);
   box-shadow: var(--box-shadow);
+  backdrop-filter: blur(30px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 5px rgba(255, 255, 255, 0.5), 0 5px 10px rgba(0, 0, 0, 0.3);
 }
 
 .quick-action-btn .btn-icon {
@@ -412,6 +440,7 @@ body {
   overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.3s ease;
+  padding: 10px;
 }
 
 @keyframes slideUp {
@@ -694,6 +723,15 @@ body {
   transform: translateX(4px);
 }
 
+.past-trip-section {
+  color: var(--background);
+  padding: 10px;
+  border-radius: 10px;
+  backdrop-filter: blur(30px);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2),
+    inset 0 -2px 5px rgba(255, 255, 255, 0.5), 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
 .past-trip-name {
   font-weight: 600;
   font-size: 1rem;
@@ -702,13 +740,13 @@ body {
 
 .past-trip-date {
   font-size: 0.85rem;
-  color: var(--text-light);
+  color: var(--background);
   margin-bottom: var(--spacing-xs);
 }
 
 .past-trip-count {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--background);
 }
 
 .loading {
@@ -738,6 +776,16 @@ footer {
   display: flex;
   padding: var(--spacing-md);
   justify-content: center;
+  color: var(--background);
+}
+
+.credits a {
+  text-decoration: none;
+  color: var(--background);
+}
+
+.credits a:hover {
+  color: #667eea;
 }
 
 @keyframes spin {
@@ -756,6 +804,10 @@ footer {
 }
 
 @media (max-width: 986px) {
+  .weather-container {
+    padding-bottom: 20px;
+  }
+
   .dashboard {
     grid-template-columns: 1fr;
   }
@@ -773,10 +825,28 @@ footer {
   .app-logo {
     max-width: 200px;
   }
+  .weather-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+
+  .weather-container.location-change-btn {
+    position: absolute;
+    bottom: 40px;
+  }
 
   .weather-content {
     flex-direction: column;
     text-align: center;
+    margin: 0;
+    gap: 0;
+  }
+
+  .weather-icon {
+    height: 80px;
   }
 
   .temperature {

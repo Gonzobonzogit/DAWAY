@@ -56,6 +56,10 @@ let pendingModalAction = null;
 
 console.log("DayAway is initializing...");
 
+window.onscroll = function () {
+  scrollFunction();
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM objects are initializing...");
   initializeApp();
@@ -65,6 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("App initialization successful!");
 });
+
+function scrollFunction() {
+  if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
+    document.getElementById("header-container").classList.add("shrink");
+  } else {
+    document.getElementById("header-container").classList.remove("shrink");
+  }
+}
 
 function initializeApp() {
   loadingIndicator = document.getElementById("loading-indicator");
