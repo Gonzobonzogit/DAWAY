@@ -1,3 +1,18 @@
+/*API_KEY = {
+  //serpAPI: '4ea8a68025300f4d6891c410fa6bfb1e36a9b819e91b634d3564023fe0a10cfa',
+  //weatherAPI:  '3673c331c78041b6b54200444252811'
+}*/
+
+/*
+API_ENDPOINTS = {
+  serpApi:  'https://serpapi.com/search.json',
+  weatherAPI: 'https://api.weatherapi.com/v1/forecast.json'
+}*/
+
+
+
+
+
 async function getCurrentLocation() {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -43,7 +58,7 @@ async function fetchEvents(eventType, location) {
   });
 
   try {
-    const response = await fetch(`/api/events?${params}`);
+    const response = await fetch(`/api/events?${params}`);  
 
     if (!response.ok) {
       throw new Error("Unable to find local events, check API");
@@ -55,6 +70,34 @@ async function fetchEvents(eventType, location) {
     throw error;
   }
 }
+
+
+/*
+------------Deployment Function----------------
+async function fetchEvents(eventType, location) {
+  const searchQuery = `${eventType} in ${location}`;
+  const param = new URLSearchParams({
+    engine: "google_events",
+    q: searchQuery,
+    location: location,
+    api_key: API_KEYS.serpApi,
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.serpApi}?${param}`);
+
+    if (!response.ok) {
+      throw new Error("Unable to find local events, check API");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Event data has failed, check API_KEY", error);
+  }
+}
+*/
+
+
 
 /**
  * fetch weather from weatherapi
@@ -83,6 +126,33 @@ async function fetchWeather(location, days = 5) {
     throw error;
   }
 }
+
+
+/*
+------------Deployment Function----------------
+async function fetchWeather(location, days) {
+  const params = new URLSearchParams({
+    key: API_KEYS.weather,
+    q: location,
+    days: Math.min(days, 7),
+    aqi: "no",
+    alerts: "no",
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.weather}?${params}`);
+
+    if (!response.ok) {
+      throw new Error("Unable to retrieve weather data!!");
+    }
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Weather Data Failed, Check API_KEY", error);
+  }
+}*/
+
 
 /**
  *
@@ -121,6 +191,36 @@ async function fetchFlights(
   }
 }
 
+/*  
+------------Deployment Function----------------
+
+async function fetchFlights(origin, destination, outboundDate, returnDate) {
+  const params = new URLSearchParams({
+    engine: "google_flights",
+    sort_by: 2,
+    currency: "USD",
+    api_key: API_KEYS.serpApi,
+    departure_id: origin,
+    arrival_id: destination,
+    outbound_date: outboundDate,
+    return_date: returnDate,
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.serpApi}?${params}`);
+
+    if (!response.ok) {
+      throw new Error("Could not find flight data.");
+    }
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.log("Could not return flight data check inputs", error);
+  }
+}
+*/
+
+
 /**
  *
  * @param {string} location
@@ -149,6 +249,33 @@ async function fetchHotelPrices(location, checkIn, checkOut) {
     return error;
   }
 }
+
+
+/*
+------------Deployment Function----------------
+
+async function fetchHotelPrices(location, checkIn, checkOut) {
+  const params = new URLSearchParams({
+    location: location,
+    checkInDate: checkIn,
+    checkOutDate: checkOut,
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS}?${params}`);
+
+    if (!response.ok) {
+      throw new Error(`Hotels API error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("fetchHotelPrices error:", error);
+    return error;
+  }
+}*/
+
+
 
 /**
  *
@@ -180,6 +307,36 @@ async function fetchLocalFood(location) {
   }
 }
 
+/*
+------------Deployment Function----------------
+
+async function fetchLocalFood(location) {
+  const searchQuery = `Resturants near ${location}`;
+  const param = new URLSearchParams({
+    engine: "google_local",
+    q: searchQuery,
+    api_key: `${API_KEYS}`,
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.serpApi}?${param}`);
+
+    if (!response.ok) {
+      throw new Error(
+        "Check your API_KEY, I know theres at least a Mcdonalds around.",
+        error
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("check syntax on LocalFood");
+  }
+}
+*/
+
+
+
 /**
  *
  * @param {*} location - city or coordinates
@@ -209,6 +366,33 @@ async function fetchLocalTransportation(location) {
   }
 }
 
+/*
+------------Deployment Function----------------
+
+async function fetchLocalTransportation(location) {
+  const searchQuery = `public transportation near ${location}`;
+  const param = new URLSearchParams({
+    engine: "google_local",
+    q: "transportation",
+    api_key: `${API_KEYS}`,
+  });
+
+  try {
+    const response = await fetch(`${API_ENDPOINTS.serpApi}?${param}`);
+
+    if (!response.ok) {
+      throw new Error(
+        "No local transportation found, Looks like your walking!!"
+      );
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log("Check the API key, Before you start walking", error);
+  }
+}
+*/
+
 /**
  *
  * @param {string} location
@@ -237,6 +421,40 @@ async function fetchEssentials(location) {
     throw error;
   }
 }
+/*
+------------Deployment Function----------------
+
+async function fetchEssentials(location, category = "all") {
+  let queries = {
+    gas: `Gas stations near ${location}`,
+    parking: `parking near ${location}`,
+    atm: `atms near ${location}`,
+    grocery: `grocery stores near ${location}`,
+    pharmacy: `pharmacy near ${location}`,
+  };
+
+  const param = new URLSearchParams({
+    engine: "google_local",
+    q: queries,
+    api_key: API_KEYS.serpApi,
+  });
+
+  try {
+    const response = await `${API_ENDPOINTS.serpApi}?${param}`;
+
+    if (!response.ok) {
+      throw new Error("Check your API_KEY & geolocation");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log(
+      "Please check your API_KEY, theres definitly a gas station nearby",
+      error
+    );
+  }
+}
+*/
 
 // Make functions globally accessible
 window.fetchEvents = fetchEvents;
