@@ -123,15 +123,19 @@ function initializeApp() {
 
 function setupEventListener() {
   if (searchEventsBtn) {
-    searchEventsBtn.addEventListener("click", () => openModal("event-modal"));
+    searchEventsBtn.addEventListener("click", () => {
+      populateLocationInput('event-location-input');
+      openModal('event-modal');
+    });
   }
-
   if (searchFlightsBtn) {
-    searchFlightsBtn.addEventListener("click", () => openModal("flight-modal"));
+    searchFlightsBtn.addEventListener("click", () => openModal('flight-modal'));
   }
-
   if (searchHotelsBtn) {
-    searchHotelsBtn.addEventListener("click", () => openModal("hotel-modal"));
+    searchHotelsBtn.addEventListener("click", () => {
+      populateLocationInput('hotel-location');
+      openModal('hotel-modal');
+    });
   }
 
   //Quick-action-btn
@@ -140,6 +144,7 @@ function setupEventListener() {
       pendingModalAction = "food";
       document.getElementById("location-modal-title").textContent =
         "Search Local Food";
+      populateLocationInput('simple-location-input');
       openModal("location-modal");
     });
   }
@@ -149,6 +154,7 @@ function setupEventListener() {
       pendingModalAction = "transportation";
       document.getElementById("location-modal-title").textContent =
         "Search Transportation";
+      populateLocationInput('simple-location-input');
       openModal("location-modal");
     });
   }
@@ -158,6 +164,7 @@ function setupEventListener() {
       pendingModalAction = "essentials";
       document.getElementById("location-modal-title").textContent =
         "Find Essentials";
+      populateLocationInput('simple-location-input');
       openModal("location-modal");
     });
   }
@@ -167,6 +174,7 @@ function setupEventListener() {
       pendingModalAction = "weather";
       document.getElementById("location-modal-title").textContent =
         "Check Weather";
+      populateLocationInput('simple-location-input');
       openModal("location-modal");
     });
   }
@@ -176,6 +184,7 @@ function setupEventListener() {
       pendingModalAction = "weather";
       document.getElementById("location-modal-title").textContent =
         "Change Location";
+      populateLocationInput('simple-location-input');
       openModal("location-modal");
     });
   }
@@ -318,6 +327,25 @@ function closeModal(modalId) {
     }
 
     console.log(`${modalId} has been closed`);
+  }
+}
+
+function populateLocationInput(inputId) {
+  const locationInput = document.getElementById(inputId);
+
+  if(!locationInput) return;
+
+  if(detectedLocation) {
+    if(detectedLocation.city) {
+      locationInput.value = detectedLocation.city;
+      console.log(`Auto-filled location based on detected location:${detectedLocation.city}`);
+    } else if (detectedLocation.coords) {
+      locationInput.value = detectedLocation.coords;
+      console.log(`Auto filled location based on detected coords:${detectedLocation.coords}`);
+    }
+  } else {
+    locationInput.value = '';
+    console.log('No detected Location avalaible for auto fill');
   }
 }
 
@@ -597,6 +625,14 @@ async function searchWeather(location) {
   const data = await fetchWeather(location, 5);
 
   updateWeatherCard(data);
+
+  detectedLocation = {
+    lat: data.location.lat,
+    lng: data.location.lng,
+    coords: `${data.location.lat}, ${data.location.lng}`,
+    city: data.location.name
+  };
+  console.log(`Updated detected location to ${detectedLocation.city}`);
 
   displayWeatherResults(data);
 }
