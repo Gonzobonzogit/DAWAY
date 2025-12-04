@@ -124,17 +124,17 @@ function initializeApp() {
 function setupEventListener() {
   if (searchEventsBtn) {
     searchEventsBtn.addEventListener("click", () => {
-      populateLocationInput('event-location-input');
-      openModal('event-modal');
+      populateLocationInput("event-location-input");
+      openModal("event-modal");
     });
   }
   if (searchFlightsBtn) {
-    searchFlightsBtn.addEventListener("click", () => openModal('flight-modal'));
+    searchFlightsBtn.addEventListener("click", () => openModal("flight-modal"));
   }
   if (searchHotelsBtn) {
     searchHotelsBtn.addEventListener("click", () => {
-      populateLocationInput('hotel-location');
-      openModal('hotel-modal');
+      populateLocationInput("hotel-location");
+      openModal("hotel-modal");
     });
   }
 
@@ -144,7 +144,7 @@ function setupEventListener() {
       pendingModalAction = "food";
       document.getElementById("location-modal-title").textContent =
         "Search Local Food";
-      populateLocationInput('simple-location-input');
+      populateLocationInput("simple-location-input");
       openModal("location-modal");
     });
   }
@@ -154,7 +154,7 @@ function setupEventListener() {
       pendingModalAction = "transportation";
       document.getElementById("location-modal-title").textContent =
         "Search Transportation";
-      populateLocationInput('simple-location-input');
+      populateLocationInput("simple-location-input");
       openModal("location-modal");
     });
   }
@@ -164,7 +164,7 @@ function setupEventListener() {
       pendingModalAction = "essentials";
       document.getElementById("location-modal-title").textContent =
         "Find Essentials";
-      populateLocationInput('simple-location-input');
+      populateLocationInput("simple-location-input");
       openModal("location-modal");
     });
   }
@@ -174,7 +174,7 @@ function setupEventListener() {
       pendingModalAction = "weather";
       document.getElementById("location-modal-title").textContent =
         "Check Weather";
-      populateLocationInput('simple-location-input');
+      populateLocationInput("simple-location-input");
       openModal("location-modal");
     });
   }
@@ -184,7 +184,7 @@ function setupEventListener() {
       pendingModalAction = "weather";
       document.getElementById("location-modal-title").textContent =
         "Change Location";
-      populateLocationInput('simple-location-input');
+      populateLocationInput("simple-location-input");
       openModal("location-modal");
     });
   }
@@ -333,19 +333,23 @@ function closeModal(modalId) {
 function populateLocationInput(inputId) {
   const locationInput = document.getElementById(inputId);
 
-  if(!locationInput) return;
+  if (!locationInput) return;
 
-  if(detectedLocation) {
-    if(detectedLocation.city) {
+  if (detectedLocation) {
+    if (detectedLocation.city) {
       locationInput.value = detectedLocation.city;
-      console.log(`Auto-filled location based on detected location:${detectedLocation.city}`);
+      console.log(
+        `Auto-filled location based on detected location:${detectedLocation.city}`
+      );
     } else if (detectedLocation.coords) {
       locationInput.value = detectedLocation.coords;
-      console.log(`Auto filled location based on detected coords:${detectedLocation.coords}`);
+      console.log(
+        `Auto filled location based on detected coords:${detectedLocation.coords}`
+      );
     }
   } else {
-    locationInput.value = '';
-    console.log('No detected Location avalaible for auto fill');
+    locationInput.value = "";
+    console.log("No detected Location avalaible for auto fill");
   }
 }
 
@@ -630,7 +634,7 @@ async function searchWeather(location) {
     lat: data.location.lat,
     lng: data.location.lng,
     coords: `${data.location.lat}, ${data.location.lng}`,
-    city: data.location.name
+    city: data.location.name,
   };
   console.log(`Updated detected location to ${detectedLocation.city}`);
 
@@ -805,11 +809,11 @@ function createHotelCard(hotel, index) {
   card.dataset.itemIndex = index;
 
   const isSelected = selectedItems.has(index);
-
+  console.log("Hotel: ", hotel);
   card.innerHTML = `
   ${
-    hotel.images?.[0]
-      ? `<img src="${hotel.images[0]}" alt="${hotel.name}">`
+    hotel.images?.[0]?.thumbnail
+      ? `<img src="${hotel.images[0]?.thumbnail}" alt="${hotel.name}">`
       : ""
   }
   <div class="card-content">
