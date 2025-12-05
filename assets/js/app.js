@@ -809,7 +809,6 @@ function createHotelCard(hotel, index) {
   card.dataset.itemIndex = index;
 
   const isSelected = selectedItems.has(index);
-  console.log("Hotel: ", hotel);
   card.innerHTML = `
   ${
     hotel.images?.[0]?.thumbnail
