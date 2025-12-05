@@ -285,7 +285,7 @@ async function detectUserLocation() {
       temperature.textContent = "--°";
     }
     if (condition) {
-      condition.textContent = 'Click "Change Location To set manually';
+      condition.textContent = 'Click "Change Location" To set manually';
     }
   }
 }
@@ -681,11 +681,13 @@ function createEventCard(event, index) {
     <h4 class="card-title">${title}</h4>
     <p class="card-info">${date}</p>
     <p class="card-info">${venue}</p>
-    ${event.link
-      ? `<a href="${event.link}" target="_blank" class="card-link">More Information</a>`
-      : ""
+    ${
+      event.link
+        ? `<a href="${event.link}" target="_blank" class="card-link">More Information</a>`
+        : ""
     }
-    <button class="select-item-btn ${isSelected ? "selected" : ""
+    <button class="select-item-btn ${
+      isSelected ? "selected" : ""
     }" data-item-index="${index}">
       ${isSelected ? "✓ Selected" : "Select this"} 
     </button>
@@ -734,30 +736,35 @@ function createFlightCard(flight, index) {
   let allFlights = "";
 
   for (let singleFlight of flights) {
-    allFlights += `<p class="card-info airline-margin-top"><span class="airport-names">${singleFlight.departure_airport?.name || "origin"
-      }</span> → <span class="airport-names">${singleFlight.arrival_airport?.name || "Destination"
-      }</span></p>
-    <p>Flight Number: <span class="airport-names">${singleFlight.flight_number
-      }</span></p>
+    allFlights += `<p class="card-info airline-margin-top"><span class="airport-names">${
+      singleFlight.departure_airport?.name || "origin"
+    }</span> → <span class="airport-names">${
+      singleFlight.arrival_airport?.name || "Destination"
+    }</span></p>
+    <p>Flight Number: <span class="airport-names">${
+      singleFlight.flight_number
+    }</span></p>
       <p class="card-info">${dayjs(
         singleFlight.departure_airport?.time || "--"
       ).format("ddd MMM DD, YYYY h:mm a")} → ${dayjs(
-        singleFlight.arrival_airport?.time || "--"
-      ).format("ddd MMM DD, YYYY h:mm a")}</p>`;
+      singleFlight.arrival_airport?.time || "--"
+    ).format("ddd MMM DD, YYYY h:mm a")}</p>`;
   }
 
   card.innerHTML = `
     <div class="card-content">
       <h4 class="card-title">${firstFlight.airline || "Flight"}</h4>
       ${allFlights}
-      ${flight.price
-      ? `<p class="card-info"><span class="airport-price">$${flight.price}</p>`
-      : ""
-    }</span>
-      ${flight.booking_token
-      ? `<a href="#" class="card-link">Book Flight</a>`
-      : ""
-    }
+      ${
+        flight.price
+          ? `<p class="card-info"><span class="airport-price">$${flight.price}</p>`
+          : ""
+      }</span>
+      ${
+        flight.booking_token
+          ? `<a href="#" class="card-link">Book Flight</a>`
+          : ""
+      }
       <button class="select-item-btn ${isSelected ? "selected" : ""}"
       data-item-index="${index}">
         ${isSelected ? "✓ Selected" : "Select This"}
@@ -803,25 +810,30 @@ function createHotelCard(hotel, index) {
 
   const isSelected = selectedItems.has(index);
   card.innerHTML = `
-  ${hotel.images?.[0]?.thumbnail
+  ${
+    hotel.images?.[0]?.thumbnail
       ? `<img src="${hotel.images[0]?.thumbnail}" alt="${hotel.name}">`
       : ""
-    }
+  }
   <div class="card-content">
     <h4 class="card-title">${hotel.name || "Hotel"}</h4>
-    ${hotel.rate_per_night
-      ? `<p class="card-info">${hotel.rate_per_night.lowest}/night</p>`
-      : ""
+    ${
+      hotel.rate_per_night
+        ? `<p class="card-info">${hotel.rate_per_night.lowest}/night</p>`
+        : ""
     }
-    ${hotel.overall_rating
-      ? `<p class="card-info"> ${hotel.overall_rating}</p>`
-      : ""
+    ${
+      hotel.overall_rating
+        ? `<p class="card-info"> ${hotel.overall_rating}</p>`
+        : ""
     }
-    ${hotel.link
-      ? `<a href="${hotel.link}" target="_blank" class="card-link"> View Hotel</a>`
-      : ""
+    ${
+      hotel.link
+        ? `<a href="${hotel.link}" target="_blank" class="card-link"> View Hotel</a>`
+        : ""
     }
-    <button class="select-item-btn ${isSelected ? "selected" : ""
+    <button class="select-item-btn ${
+      isSelected ? "selected" : ""
     }" data-item-index="${index}">
       ${isSelected ? "✓ Selected" : "Select This"}
     </button>
@@ -872,8 +884,9 @@ function createLocalCard(result, index) {
       ${result.rating ? `<p class="card-info">${result.rating}</p>` : ""}
       ${result.address ? `<p class="card-info">${result.address}</p>` : ""}
       ${result.phone ? `<p class="card-info">${result.phone}</p>` : ""}
-      <button class="select-item-btn ${isSelected ? "selected" : ""
-    }" data-item-index="${index}">
+      <button class="select-item-btn ${
+        isSelected ? "selected" : ""
+      }" data-item-index="${index}">
         ${isSelected ? "✓ Selected" : "Select This"}
       </button>
     </div>
@@ -917,8 +930,9 @@ function createWeatherCard(day) {
   card.innerHTML = `
     <div class="card-content">
       <h4 class="card-title">${date}</h4>
-      <img src="https://${day.day.condition.icon}" alt="${day.day.condition.text
-    }" style="width:64px;">
+      <img src="https://${day.day.condition.icon}" alt="${
+    day.day.condition.text
+  }" style="width:64px;">
       <p class="card-info">${day.day.condition.text}</p>
       <p class="card-info">🌡️High:${Math.round(day.day.maxtemp_f)}°F</p>
       <p class="card-info">🌡️Low:${Math.round(day.day.mintemp_f)}°F</p>
@@ -1039,8 +1053,9 @@ function getItemTitle(item, type) {
         totalFlights.departure = flights[0]?.departure_airport?.id;
         totalFlights.arrival = flights[0]?.arrival_airport?.id;
       }
-      return `${totalFlights.airline || "Flight"}: ${totalFlights.departure || ""
-        } → ${totalFlights.arrival || ""}`;
+      return `${totalFlights.airline || "Flight"}: ${
+        totalFlights.departure || ""
+      } → ${totalFlights.arrival || ""}`;
     case "hotel":
       return item.name || "Hotel";
     case "food":
@@ -1081,8 +1096,9 @@ function createTripItemCard(item) {
   card.innerHTML = `
     <div class="trip-item-info">
       <div class="trip-item-title">${icon} ${item.title}</div>
-      <div class="trip-item-details">${count} item${count !== 1 ? "s" : ""
-    }</div>
+      <div class="trip-item-details">${count} item${
+    count !== 1 ? "s" : ""
+  }</div>
     </div>
     <button class="trip-item-remove" data-item-id="${item.id}">Remove</button>
   `;
@@ -1208,8 +1224,9 @@ function createPastTripCard(trip) {
   card.innerHTML = `
     <div class="past-trip-name">${trip.name}</div>
     <div class="past-trip-date">Planned: ${date}</div>
-    <div class="past-trip-count">${trip.itemCount} item${trip.itemCount !== 1 ? "s" : ""
-    }</div>
+    <div class="past-trip-count">${trip.itemCount} item${
+    trip.itemCount !== 1 ? "s" : ""
+  }</div>
   `;
 
   card.addEventListener("click", () => viewPastTrip(trip));
